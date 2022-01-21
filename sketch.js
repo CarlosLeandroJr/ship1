@@ -4,8 +4,10 @@ const Bodies = Matter.Bodies;
 const Constraint = Matter.Constraint;
 
 var engine, world, backgroundImg;
-var canvas, angle, tower, ground, cannon;
+var canvas, angle, tower, ground, cannon, boat;
 var cannonBall;
+var balls = [];
+var boats = [];
 
 function preload() {
   backgroundImg = loadImage("./assets/background.gif");
@@ -26,7 +28,6 @@ function setup() {
   World.add(world, tower);
 
   cannon = new Cannon(180, 110, 130, 100, angle);
-  cannonBall = new CannonBall(cannon.x, cannon.y);
 }
 
 function draw() {
@@ -40,9 +41,54 @@ function draw() {
   imageMode(CENTER);
   image(towerImage, tower.position.x, tower.position.y, 160, 310);
   pop();
+  for(var iBalls = 0; iBalls < balls.length; iBalls++) {
+    showCannonBalls(balls[iBalls]);
 
+  } 
+
+  showBoats();
   cannon.display();
-  cannonBall.display();
 }
 
+function keyPressed(){
+  if (keyCode == DOWN_ARROW) {
+    cannonBall = new CannonBall(cannon.x, cannon.y);
+    Matter.Body.setAngle(cannonBall.body,cannon.angle);
+    balls.push(cannonBall);
+    
+  }
+}
 
+function showCannonBalls(cannonBall) {
+  cannonBall.display();
+
+}
+
+function showBoats() {
+  if (boats.lenght > 0) {
+    for (var iBoats = 0; iBoats < boats.length; iBoats++) {
+      if (boats [iBoats]) {
+        Matter.Body.setVelocity(boats [iBoats].body,{
+          x: -0.8, 
+          y: 0
+        });
+        boats [iBoats].display();
+      }
+
+    }
+    
+  }
+  else {
+    boat = new Boat (width, height - 60, 170, 170);
+    boats.push(boat);
+
+  }
+}
+
+function keyReleased(){
+  if (keyCode == DOWN_ARROW){
+    balls[balls.length - 1].shoot();
+    
+    
+  }
+}
